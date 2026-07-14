@@ -97,6 +97,8 @@ def create_app():
                 <h1>Colegio Bilingüe Monterrey</h1>
                 <h2>Portal Escolar 1</h2>
 
+                <p>Aprendemos Juntos, Crecemos Juntos</p>
+
             </main>
         </body>
         </html>
