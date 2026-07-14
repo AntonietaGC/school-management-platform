@@ -95,7 +95,7 @@ def create_app():
         <body>
             <main class="container">
                 <h1>Colegio Bilingüe Monterrey</h1>
-                <h2>Portal Escolar</h2>
+                <h2>Portal Escolar 1</h2>
 
                 <p>Bienvenidos</p>
                 <p>Seleccione una opción</p>
