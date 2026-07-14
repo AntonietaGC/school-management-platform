@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: school-platform-prod
+  namespace: school-prod
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: school-platform-prod
+
+  template:
+    metadata:
+      labels:
+        app: school-platform-prod
+
+    spec:
+      containers:
+      - name: school-platform
+        image: school-management-platform:latest
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 5000
+
+        env:
+        - name: APP_ENVIRONMENT
+          value: "production"
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
