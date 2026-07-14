@@ -97,31 +97,6 @@ def create_app():
                 <h1>Colegio Bilingüe Monterrey</h1>
                 <h2>Portal Escolar 1</h2>
 
-                <p>Bienvenidos</p>
-                <p>Seleccione una opción</p>
-
-                <nav class="menu">
-                    <a href="#">Login / Register</a>
-                    <a href="#">Learning Plan</a>
-                    <a href="#">Library</a>
-                    <a href="#">Calendar</a>
-                    <a href="#">Contact</a>
-                </nav>
-
-                <footer>
-                    <h3>Nuestra misión</h3>
-
-                    <p>
-                        Formar estudiantes íntegros, bilingües e innovadores,
-                        promoviendo la excelencia académica y el uso responsable
-                        de la tecnología.
-                    </p>
-
-                    <small>
-                        © 2026 Colegio Bilingüe Monterrey |
-                        Ambiente: {environment}
-                    </small>
-                </footer>
             </main>
         </body>
         </html>
