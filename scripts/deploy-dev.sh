@@ -9,7 +9,7 @@ DEPLOYMENT="school-platform-dev"
 CONTAINER="school-platform"
 
 echo " 1. AUTOMATED TESTS "
-python3 -m pytest tests -v
+.venv/bin/python -m pytest tests -v
 
 echo " 2. ANSIBLE VALIDATION "
 ansible-playbook \
