@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.log
+
+.terraform/
+*.tfstate
+.tfstate.
+.terraform.lock.hcl
+
+ansible/*.retry
+
+minikube/
+kubeconfig 
