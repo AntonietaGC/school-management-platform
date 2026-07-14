@@ -1,0 +1,12 @@
+.git
+.github
+.venv
+_pycache_
+.pytest_cache
+*.pyc
+.env
+tests
+terraform
+ansible
+kubernetes
+README.md 
