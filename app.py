@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, jsonify 
+from flask import Flask, jsonify
 
 
 def create_app():
@@ -15,13 +15,114 @@ def create_app():
         <html lang="es">
         <head>
             <meta charset="UTF-8">
-            <title>School DevOps App</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Colegio Bilingüe Monterrey</title>
+
+            <style>
+                * {{
+                    box-sizing: border-box;
+                }}
+
+                body {{
+                    margin: 0;
+                    min-height: 100vh;
+                    font-family: Arial, Helvetica, sans-serif;
+                    background: linear-gradient(135deg, #2e7d32, #ff9800);
+                    color: white;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 30px;
+                }}
+
+                .container {{
+                    width: 100%;
+                    max-width: 900px;
+                    background: rgba(255, 255, 255, 0.14);
+                    padding: 45px;
+                    border-radius: 20px;
+                    text-align: center;
+                    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.30);
+                }}
+
+                h1 {{
+                    font-size: 44px;
+                    margin: 0 0 10px;
+                }}
+
+                h2 {{
+                    color: #ffe082;
+                }}
+
+                .menu {{
+                    margin-top: 30px;
+                    display: flex;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    gap: 15px;
+                }}
+
+                .menu a {{
+                    min-width: 170px;
+                    padding: 13px 20px;
+                    border-radius: 10px;
+                    background: rgba(255, 255, 255, 0.20);
+                    color: white;
+                    text-decoration: none;
+                    font-weight: bold;
+                    transition: 0.3s;
+                }}
+
+                .menu a:hover {{
+                    background: white;
+                    color: #2e7d32;
+                    transform: translateY(-3px);
+                }}
+
+                footer {{
+                    margin-top: 40px;
+                    padding-top: 20px;
+                    border-top: 1px solid rgba(255, 255, 255, 0.30);
+                }}
+
+                footer small {{
+                    display: block;
+                    margin-top: 30px;
+                }}
+            </style>
         </head>
-        <body style="font-family: Arial; text-align: center; margin-top: 80px;">
-            <h1>Proyecto Integrador DevOps</h1>
-            <h2>Aplicación desplegada en Microsoft Azure</h2>
-            <p>Ambiente: {environment}</p>
-            <p>Versión: 1.0.0</p>
+
+        <body>
+            <main class="container">
+                <h1>Colegio Bilingüe Monterrey</h1>
+                <h2>Portal Escolar 1</h2>
+
+                <p>Bienvenidos</p>
+                <p>Seleccione una opción</p>
+
+                <nav class="menu">
+                    <a href="#">Login / Register</a>
+                    <a href="#">Learning Plan</a>
+                    <a href="#">Library</a>
+                    <a href="#">Calendar</a>
+                    <a href="#">Contact</a>
+                </nav>
+
+                <footer>
+                    <h3>Nuestra misión</h3>
+
+                    <p>
+                        Formar estudiantes íntegros, bilingües e innovadores,
+                        promoviendo la excelencia académica y el uso responsable
+                        de la tecnología.
+                    </p>
+
+                    <small>
+                        © 2026 Colegio Bilingüe Monterrey |
+                        Ambiente: {environment}
+                    </small>
+                </footer>
+            </main>
         </body>
         </html>
         """
@@ -29,15 +130,16 @@ def create_app():
     @app.get("/health")
     def health():
         return jsonify(
-            application="school-app",
+            application="school-management-platform",
             status="healthy",
-            version="1.0.0"
+            version="1.0.0",
         ), 200
 
     return app
 
 
 app = create_app()
+
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "5000"))
