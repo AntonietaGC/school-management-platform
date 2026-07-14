@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: school-platform-dev
+  namespace: school-dev
+  labels:
+    app: school-platform-dev
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: school-platform-dev
+
+  template:
+    metadata:
+      labels:
+        app: school-platform-dev
+
+    spec:
+      containers:
+        - name: school-platform
+          image: school-management-platform:dev
+          imagePullPolicy: Never
+
+          ports:
+            - name: http
+              containerPort: 5000
+
+          env:
+            - name: APP_ENVIRONMENT
+              value: development
+
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
