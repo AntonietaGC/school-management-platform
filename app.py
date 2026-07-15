@@ -156,7 +156,7 @@ def create_app():
                     <a href="#">Login / Register</a>
                     <a href="#">Learning Plan</a>
                     <a href="#">Library</a>
-                    <a href="#">Calendar</a>
+                    <a href="#" onclick="openCalendar(); return false;"> Calendar</a>
                     <a href="#" onclick="openContact(); return false;"> Contact</a>
                 </nav> 
 
@@ -177,17 +177,16 @@ def create_app():
 
              <div id="contactModal" class="modal">
                  <div class="modal-content">
+                     
                      <button class="close-button" onclick="closeContact()">
-                        &times;
+                         &times;
                      </button>
 
-                     <h2>Contacto</h2>
+                     <h2 id="modalTitle">Contacto</h2>
 
-                     <p><strong>Colegio Bilingüe Monterrey</strong></p>
-                     <p>📍 Monterrey, Nuevo León</p>
-                     <p>📞 Teléfono: (81) 5555-2026</p>
-                     <p>✉ Correo: contacto@colegiomonterrey.edu</p>
-                     <p>🕒 Horario: lunes a viernes, 8:00 a.m. a 4:00 p.m.</p>
+                     <div id="modalBody">
+
+                     </div>
 
                      <button class="return-button" onclick="closeContact()">
                          Volver al menú
@@ -197,12 +196,41 @@ def create_app():
             </main>
           <script>
               function openContact() {{
-                  document.getElementById("contactModal").style.display = "flex";
+
+                  document.getElementById("modalTitle").innerHTML = "Contacto";
+
+                  document.getElementById("modalBody").innerHTML = `
+                      <p><strong>Colegio Bilingüe Monterrey</strong></p>
+                      <p>📍 Monterrey, Nuevo León</p>
+                      <p>📞 (81) 5555-2026</p>
+                      <p>✉ contacto@colegiomonterrey.edu</p>
+                      <p>🕒 Lunes a Viernes 8:00 AM - 4:00 PM</p>
+                 `;
+
+                document.getElementById("contactModal").style.display = "flex";
+           
               }}
 
               function closeContact() {{
                   document.getElementById("contactModal").style.display = "none";
               }}
+
+              function openCalendar() {{
+                    document.getElementById("modalTitle").innerHTML =
+                        "Calendario Escolar";
+
+                    document.getElementById("modalBody").innerHTML = `
+                        <p>📅 24 Agosto Meet your teacher</p>
+                        <p>📅 31 Agosto Inicio Escolar</p>
+                        <p>📅 16 Septiembre Asueto</p>
+                        <p>📅 5  Octubre Examenes</p>
+                        <p>📅 30 Octubre Consejo Técnico</p>
+                        <p>📅 18 Diciembre Vacaciones</p>
+                    `;
+
+                  document.getElementById("contactModal").style.display = "flex";
+               
+               }}
 
               window.onclick = function(event) {{
                   const modal = document.getElementById("contactModal");
