@@ -118,6 +118,10 @@ def create_app():
                         de la tecnología.
                     </p>
 
+                    <small>
+                        © 2026 Colegio Bilingüe Monterrey |
+                        Ambiente: {environment}
+                   </small>
                 </footer>
             </main>
         </body>
