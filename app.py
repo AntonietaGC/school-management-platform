@@ -109,6 +109,16 @@ def create_app():
                     <a href="#">Contact</a>
                 </nav>
 
+                  <footer>
+                    <h3>Nuestra misión</h3>
+
+                    <p>
+                        Formar estudiantes íntegros, bilingües e innovadores,
+                        promoviendo la excelencia académica y el uso responsable
+                        de la tecnología.
+                    </p>
+
+                </footer>
             </main>
         </body>
         </html>
