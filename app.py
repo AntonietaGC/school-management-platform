@@ -99,6 +99,16 @@ def create_app():
 
                 <p>Aprendemos Juntos, Crecemos Juntos</p>
 
+                <p>Seleccione una opción</p>
+
+                <nav class="menu">
+                    <a href="#">Login / Register</a>
+                    <a href="#">Learning Plan</a>
+                    <a href="#">Library</a>
+                    <a href="#">Calendar</a>
+                    <a href="#">Contact</a>
+                </nav>
+
             </main>
         </body>
         </html>
