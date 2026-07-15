@@ -89,6 +89,57 @@ def create_app():
                     display: block;
                     margin-top: 30px;
                 }}
+                
+                 .modal {{
+        	     display: none;
+                     position: fixed;
+                     inset: 0;
+                     background: rgba(0,0,0,.65);
+                     justify-content: center;
+                     align-items: center;
+                     z-index: 1000;
+                 }}
+
+                 .modal-content {{
+                     position: relative;
+                     background: white;
+                     color: #333;
+                     padding: 35px;
+                     border-radius: 15px;
+                     width: 450px;
+                     text-align: center;
+                     box-shadow: 0 10px 30px rgba(0,0,0,.4);
+                 }}
+
+                 .modal-content h2 {{
+                     color: #2e7d32;
+                 }}
+
+                 .close-button {{
+                     position: absolute;
+                     top: 10px;
+                     right: 15px;
+                     background: transparent;
+                     border: none;
+                     font-size: 28px;
+                     cursor: pointer;
+                  }}
+
+                .return-button {{
+                    margin-top: 20px;
+                    background: #ff9800;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 16px;
+                  }}
+
+                .return-button:hover {{
+                    background: #e68900;
+                  }}
+
             </style>
         </head>
 
@@ -106,8 +157,8 @@ def create_app():
                     <a href="#">Learning Plan</a>
                     <a href="#">Library</a>
                     <a href="#">Calendar</a>
-                    <a href="#">Contact</a>
-                </nav>
+                    <a href="#" onclick="openContact(); return false;"> Contact</a>
+                </nav> 
 
                   <footer>
                     <h3>Nuestra misión</h3>
@@ -123,7 +174,44 @@ def create_app():
                         Ambiente: {environment}
                    </small>
                 </footer>
+
+             <div id="contactModal" class="modal">
+                 <div class="modal-content">
+                     <button class="close-button" onclick="closeContact()">
+                        &times;
+                     </button>
+
+                     <h2>Contacto</h2>
+
+                     <p><strong>Colegio Bilingüe Monterrey</strong></p>
+                     <p>📍 Monterrey, Nuevo León</p>
+                     <p>📞 Teléfono: (81) 5555-2026</p>
+                     <p>✉ Correo: contacto@colegiomonterrey.edu</p>
+                     <p>🕒 Horario: lunes a viernes, 8:00 a.m. a 4:00 p.m.</p>
+
+                     <button class="return-button" onclick="closeContact()">
+                         Volver al menú
+                     </button>
+                 </div>
+              </div>
             </main>
+          <script>
+              function openContact() {{
+                  document.getElementById("contactModal").style.display = "flex";
+              }}
+
+              function closeContact() {{
+                  document.getElementById("contactModal").style.display = "none";
+              }}
+
+              window.onclick = function(event) {{
+                  const modal = document.getElementById("contactModal");
+
+                  if (event.target === modal) {{
+                      closeContact();
+                  }}
+              }};
+          </script>
         </body>
         </html>
         """
