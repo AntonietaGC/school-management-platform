@@ -59,9 +59,9 @@ jobs:
         run: |
           docker images school-management-platform
 
-  deploy-test:
-
-    name: CD - Test Self Hosted Runner
+  
+  deploy-dev:
+    name: CD - Deploy to Minikube
 
     needs: validate
 
@@ -74,19 +74,23 @@ jobs:
       - school
 
     steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
-
-      - name: Runner Information
+      - name: Show deployment information
         run: |
-          echo "RUNNER"
-          hostname
-          whoami
-          pwd
+          echo "Runner: $RUNNER_NAME"
+          echo "Branch: $GITHUB_REF_NAME"
+          echo "Commit: $GITHUB_SHA"
+          echo "Image: school-management-platform:dev-${GITHUB_RUN_NUMBER}"
 
-      - name: Verify Docker
+      - name: Verify required tools
         run: |
           docker --version
+          minikube version
+          kubectl version --client
+          terraform version
+          ansible --version
 
       - name: Start and verify Minikube
         run: |
@@ -98,10 +102,48 @@ jobs:
           minikube status
           kubectl get nodes
 
-      - name: Verify Kubernetes
+      - name: Prepare Python environment
         run: |
-          kubectl get nodes
+          rm -rf .venv
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install -r requirements.txt
 
-      - name: Verify Repository
+      - name: Deploy application
         run: |
-          ls
+          chmod +x scripts/deploy-dev.sh
+          ./scripts/deploy-dev.sh dev-${GITHUB_RUN_NUMBER}
+
+      - name: Verify rollout
+        run: |
+          kubectl rollout status \
+            deployment/school-platform-dev \
+            -n school-dev \
+            --timeout=180s
+
+      - name: Show deployed image
+        run: |
+          kubectl get deployment school-platform-dev \
+            -n school-dev \
+            -o jsonpath='{.spec.template.spec.containers[0].image}'
+          echo
+
+      - name: Show Kubernetes resources
+        run: |
+          kubectl get deployment,pods,service \
+            -n school-dev \
+            -o wide
+
+      - name: Validate health endpoint
+        run: |
+          kubectl run github-health-${GITHUB_RUN_ID} \
+            -n school-dev \
+            --rm \
+            --attach \
+            --restart=Never \
+            --image=curlimages/curl \
+            -- \
+            curl --fail --silent --show-error \
+            http://school-platform-dev-service/health
+   
+         
