@@ -88,9 +88,15 @@ jobs:
         run: |
           docker --version
 
-      - name: Verify Minikube
+      - name: Start and verify Minikube
         run: |
+          if ! minikube status >/dev/null 2>&1; then
+            echo "Minikube is stopped. Starting cluster..."
+            minikube start
+          fi
+
           minikube status
+          kubectl get nodes
 
       - name: Verify Kubernetes
         run: |
