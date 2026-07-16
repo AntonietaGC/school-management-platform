@@ -58,3 +58,44 @@ jobs:
       - name: Show Docker image
         run: |
           docker images school-management-platform
+
+  deploy-test:
+
+    name: CD - Test Self Hosted Runner
+
+    needs: validate
+
+    if: github.event_name == 'push'
+
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - school
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Runner Information
+        run: |
+          echo "RUNNER"
+          hostname
+          whoami
+          pwd
+
+      - name: Verify Docker
+        run: |
+          docker --version
+
+      - name: Verify Minikube
+        run: |
+          minikube status
+
+      - name: Verify Kubernetes
+        run: |
+          kubectl get nodes
+
+      - name: Verify Repository
+        run: |
+          ls
