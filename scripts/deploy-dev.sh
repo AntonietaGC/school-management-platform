@@ -16,10 +16,28 @@ ansible-playbook \
   -i ansible/inventory.ini \
   ansible/setup-server.yml
 
-echo " 3. TERRAFORM VALIDATION "
+echo "===== 3. TERRAFORM INFRASTRUCTURE ====="
+
 terraform -chdir=terraform init -input=false
 terraform -chdir=terraform validate
-terraform -chdir=terraform apply -auto-approve -input=false
+
+echo "Importing existing namespaces when necessary..."
+
+terraform -chdir=terraform state show \
+  kubernetes_namespace_v1.school_dev >/dev/null 2>&1 || \
+terraform -chdir=terraform import \
+  kubernetes_namespace_v1.school_dev \
+  school-dev
+
+terraform -chdir=terraform state show \
+  kubernetes_namespace_v1.school_prod >/dev/null 2>&1 || \
+terraform -chdir=terraform import \
+  kubernetes_namespace_v1.school_prod \
+  school-prod
+
+terraform -chdir=terraform apply \
+  -auto-approve \
+  -input=false
 
 echo " 4. DOCKER BUILD "
 docker build -t "${IMAGE}" .
