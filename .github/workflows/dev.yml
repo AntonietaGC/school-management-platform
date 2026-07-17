@@ -1,0 +1,149 @@
+name: CI School Management Platform
+
+on:
+  push:
+    branches:
+      - "feature/**"
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Test and Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run automated tests
+        run: |
+          python -m pytest tests -v
+
+      - name: Validate Python syntax
+        run: |
+          python -m py_compile app.py
+
+      - name: Verify Kubernetes manifest files
+        run: |
+          test -f kubernetes/dev/deployment.yaml
+          test -f kubernetes/dev/service.yaml
+          test -f kubernetes/prod/deployment.yaml
+          test -f kubernetes/prod/service.yaml
+
+          grep -q "kind: Deployment" kubernetes/dev/deployment.yaml
+          grep -q "kind: Service" kubernetes/dev/service.yaml
+
+          echo "Kubernetes manifest files found"
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --tag school-management-platform:ci-${{ github.run_number }} \
+            .
+
+      - name: Show Docker image
+        run: |
+          docker images school-management-platform
+
+  
+  deploy-dev:
+    name: CD - Deploy to Minikube
+
+    needs: validate
+
+    if: github.event_name == 'push'
+
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - school
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Show deployment information
+        run: |
+          echo "Runner: $RUNNER_NAME"
+          echo "Branch: $GITHUB_REF_NAME"
+          echo "Commit: $GITHUB_SHA"
+          echo "Image: school-management-platform:dev-${GITHUB_RUN_NUMBER}"
+
+      - name: Verify required tools
+        run: |
+          docker --version
+          minikube version
+          kubectl version --client
+          terraform version
+          ansible --version
+
+      - name: Start and verify Minikube
+        run: |
+          if ! minikube status >/dev/null 2>&1; then
+            echo "Minikube is stopped. Starting cluster..."
+            minikube start
+          fi
+
+          minikube status
+          kubectl get nodes
+
+      - name: Prepare Python environment
+        run: |
+          rm -rf .venv
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install -r requirements.txt
+
+      - name: Deploy application
+        run: |
+          chmod +x scripts/deploy-dev.sh
+          ./scripts/deploy-dev.sh dev-${GITHUB_RUN_NUMBER}
+
+      - name: Verify rollout
+        run: |
+          kubectl rollout status \
+            deployment/school-platform-dev \
+            -n school-dev \
+            --timeout=180s
+
+      - name: Show deployed image
+        run: |
+          kubectl get deployment school-platform-dev \
+            -n school-dev \
+            -o jsonpath='{.spec.template.spec.containers[0].image}'
+          echo
+
+      - name: Show Kubernetes resources
+        run: |
+          kubectl get deployment,pods,service \
+            -n school-dev \
+            -o wide
+
+      - name: Validate health endpoint
+        run: |
+          kubectl run github-health-${GITHUB_RUN_ID} \
+            -n school-dev \
+            --rm \
+            --attach \
+            --restart=Never \
+            --image=curlimages/curl \
+            -- \
+            curl --fail --silent --show-error \
+            http://school-platform-dev-service/health
+   
+         
